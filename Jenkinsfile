@@ -4,21 +4,20 @@ pipeline {
     environment {
         GITHUB = 'https://github.com/lokesh2201013/apache'
         GITHUBFILE = 'index.html'
-        DESTINATION = '/var/www/html/index.html'
+        DEST = '/var/www/html/index.html'
     }
     
     stages {
-        stage('Checkout and Deploy') {
+        stage('Updateing') {
             steps {
                 script {
-                    // Clear the contents of the destination file
-                    sh " sudo cat ${DESTINATION} > '/var/www/html/index2.html'"
-                    sh "sudo truncate --size 0 ${DESTINATION}"
-                    
-                    // Download index.html from GitHub and save to the destination
-                    sh " cat /var/lib/jenkins/workspace/work/index.html > ${DESTINATION}"
-                    
-                    // Restart httpd service
+                    // backup for the orignal file
+                    sh " sudo cat ${DEST} > '/var/www/html/index2.html'"
+                    // delete all content of index.html
+                    sh "sudo truncate --size 0 ${DEST}"
+                    // take index.html from jenkins workspace
+                    sh " cat /var/lib/jenkins/workspace/work/index.html > ${DEST}"
+                    // restart httpd service
                     sh 'sudo systemctl restart httpd.service'
                 }
             }
