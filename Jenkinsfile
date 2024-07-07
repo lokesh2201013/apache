@@ -12,13 +12,13 @@ pipeline {
             steps {
                 script {
                     // Clear the contents of the destination file
-                    sh "truncate --size 0 ${DESTINATION}"
+                    sh "sudo truncate --size 0 ${DESTINATION}"
                     
                     // Download index.html from GitHub and save to the destination
-                    sh "curl -s ${GITHUB}/${GITHUBFILE} > ${DESTINATION}"
+                    sh "sudo curl -s ${GITHUB}/${GITHUBFILE} > ${DESTINATION}"
                     
                     // Restart httpd service
-                    sh 'systemctl restart httpd.service'
+                    sh 'sudo systemctl restart httpd.service'
                     
                     // Open localhost:80 in Firefox
                     sh 'firefox http://localhost:80'
