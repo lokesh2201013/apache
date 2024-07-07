@@ -1,11 +1,29 @@
 pipeline {
     agent any
+    
+    environment {
+        GITHUB = 'https://github.com/lokesh2201013/apache'
+        GITHUBFILE = 'index.html'
+        DESTINATION = '/var/www/html/index.html'
+    }
+    
     stages {
-        stage('Checkout') {
+        stage('Checkout and Deploy') {
             steps {
-                sh " echo started"
+                script {
+                    // Clear the contents of the destination file
+                    sh "truncate --size 0 ${DESTINATION}"
+                    
+                    // Download index.html from GitHub and save to the destination
+                    sh "curl -s ${GITHUB}/${GITHUBFILE} > ${DESTINATION}"
+                    
+                    // Restart httpd service
+                    sh 'systemctl restart httpd.service'
+                    
+                    // Open localhost:80 in Firefox
+                    sh 'firefox http://localhost:80'
+                }
             }
         }
-        // other stages...
     }
 }
