@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Clear the contents of the destination file
-                    sh " cat ${DESTINATION} > '/var/www/html/index2.html'"
+                    sh " sudo cat ${DESTINATION} > '/var/www/html/index2.html'"
                     sh "sudo truncate --size 0 ${DESTINATION}"
                     
                     // Download index.html from GitHub and save to the destination
