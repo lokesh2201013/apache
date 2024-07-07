@@ -15,7 +15,7 @@ pipeline {
                     sh "sudo truncate --size 0 ${DESTINATION}"
                     
                     // Download index.html from GitHub and save to the destination
-                    sh " curl -s ${GITHUB}/${GITHUBFILE} > ${DESTINATION}"
+                    sh " cat /var/lib/jenkins/workspace/work/index.html > ${DESTINATION}"
                     
                     // Restart httpd service
                     sh 'sudo systemctl restart httpd.service'
