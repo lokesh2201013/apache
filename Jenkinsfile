@@ -8,7 +8,7 @@ pipeline {
     }
     
     stages {
-        stage('Checkout and Deploy') {
+        stage('Updateing') {
             steps {
                 script {
                     // Download index.html from GitHub and save to the destination
