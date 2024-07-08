@@ -2,7 +2,7 @@ pipeline {
     agent any
     
     environment {
-        GITHUB = 'https://github.com/lokesh2201013/apache/blob/master'
+        GITHUB = 'https://raw.githubusercontent.com/lokesh2201013/apache/master'
         DESTINATION = '/var/www/html/index.html'
         DESTINATIONCONF = '/etc/httpd'
     }
