@@ -2,41 +2,36 @@ pipeline {
     agent any
     
     environment {
-        GITHUB = 'https://github.com/lokesh2201013/apache'
-        GITHUBFILE = 'index.html'
+        GITHUB = 'https://raw.githubusercontent.com/lokesh2201013/apache/main'
         DESTINATION = '/var/www/html/index.html'
-        DESTINATIONCONF='/etc/httpd'
+        DESTINATIONCONF = '/etc/httpd'
     }
     
     stages {
         stage('Checkout and Deploy') {
             steps {
                 script {
-                    // Clear the contents of the destination file
-                    sh "sudo truncate --size 0 ${DESTINATION}"
-                    
                     // Download index.html from GitHub and save to the destination
-                    sh " cat https://github.com/lokesh2201013/apache/index.html > ${DESTINATION}"
+                    sh "curl -o ${DESTINATION} ${GITHUB}/index.html"
                     
-                    sh "sudo truncate --size 0 ${DESTINATIONCONF/conf/httpd.conf}"
+                    // Ensure the httpd configuration directories exist
+                    sh "sudo mkdir -p ${DESTINATIONCONF}/conf"
+                    sh "sudo mkdir -p ${DESTINATIONCONF}/conf.d"
 
-                    sh "cat https://github.com/lokesh2201013/apache/httpd.conf > ${DESTINATIONCONF/conf/httpd.conf}"
-                     
-                     sh "sudo truncate --size 0 ${DESTINATIONCONF/conf.d/welcome.conf}"
+                    // Download httpd.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf/httpd.conf ${GITHUB}/httpd.conf"
 
-                    sh "cat https://github.com/lokesh2201013/apache/welcome.conf > ${DESTINATIONCONF/conf.d/welcome.conf}"
+                    // Download welcome.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/welcome.conf ${GITHUB}/welcome.conf"
 
-                    sh "sudo truncate --size 0 ${DESTINATIONCONF/conf.d/autoindex.conf}"
+                    // Download autoindex.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/autoindex.conf ${GITHUB}/autoindex.conf"
 
-                    sh "cat https://github.com/lokesh2201013/apache/autoindex.conf > ${DESTINATIONCONF/conf.d/autoindex.conf}"
-
-                    sh "sudo truncate --size 0 ${DESTINATIONCONF/conf.d/userdir.conf}"
-
-                    sh "cat https://github.com/lokesh2201013/apache/userdir.conf > ${DESTINATIONCONF/conf.d/userdir.conf}"
+                    // Download userdir.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/userdir.conf ${GITHUB}/userdir.conf"
 
                     // Restart httpd service
                     sh 'sudo systemctl restart httpd.service'
-                   
                 }
             }
         }
