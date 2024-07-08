@@ -15,7 +15,7 @@ pipeline {
                     sh "sudo curl -o ${DESTINATION} ${GITHUB}/index.html"
                    
                     // Download httpd.conf
-                    sh "sudp curl -o ${DESTINATIONCONF}/conf/httpd.conf ${GITHUB}/httpd.conf"
+                    sh "sudo curl -o ${DESTINATIONCONF}/conf/httpd.conf ${GITHUB}/httpd.conf"
 
                     // Download welcome.conf
                     sh "sudo curl -o ${DESTINATIONCONF}/conf.d/welcome.conf ${GITHUB}/welcome.conf"
