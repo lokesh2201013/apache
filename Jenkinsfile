@@ -2,26 +2,36 @@ pipeline {
     agent any
     
     environment {
-        GITHUB = 'https://github.com/lokesh2201013/apache'
-        GITHUBFILE = 'index.html'
+        GITHUB = 'https://raw.githubusercontent.com/lokesh2201013/apache/main'
         DESTINATION = '/var/www/html/index.html'
+        DESTINATIONCONF = '/etc/httpd'
     }
     
     stages {
         stage('Checkout and Deploy') {
             steps {
                 script {
-                    // Clear the contents of the destination file
-                    sh "sudo truncate --size 0 ${DESTINATION}"
-                    
                     // Download index.html from GitHub and save to the destination
-                    sh " cat /var/lib/jenkins/workspace/work/index.html > ${DESTINATION}"
+                    sh "curl -o ${DESTINATION} ${GITHUB}/index.html"
                     
+                    // Ensure the httpd configuration directories exist
+                    sh "sudo mkdir -p ${DESTINATIONCONF}/conf"
+                    sh "sudo mkdir -p ${DESTINATIONCONF}/conf.d"
+
+                    // Download httpd.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf/httpd.conf ${GITHUB}/httpd.conf"
+
+                    // Download welcome.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/welcome.conf ${GITHUB}/welcome.conf"
+
+                    // Download autoindex.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/autoindex.conf ${GITHUB}/autoindex.conf"
+
+                    // Download userdir.conf
+                    sh "curl -o ${DESTINATIONCONF}/conf.d/userdir.conf ${GITHUB}/userdir.conf"
+
                     // Restart httpd service
                     sh 'sudo systemctl restart httpd.service'
-                    
-                    // Open localhost:80 in Firefox
-                    sh 'firefox http://localhost:80'
                 }
             }
         }
